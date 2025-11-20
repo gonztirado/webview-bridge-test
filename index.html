@@ -1,0 +1,31 @@
+<html>
+<head>
+    <script type="text/javascript">
+        function goBackToHost() {
+            // if (window.webkit?.messageHandlers?.AppBridge) {
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.AppBridge) {
+                // iOS
+                window.webkit.messageHandlers.AppBridge.postMessage("goBackToHost");
+            // } else if (window.AppBridge?.goBackToHost) {
+            } else if (window.AppBridge && window.AppBridge.goBackToHost) {
+                // Android
+                window.AppBridge.goBackToHost();
+            } else {
+                // Fallback for web debugging
+                console.log("Back to host triggered");
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById("back").addEventListener("click", function() {
+                goBackToHost();
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>Hello Kid!</h1>
+    <p>Glad to see you here, I hope you enjoy it!</p>
+    <button id="back">Go back</button>
+</body>
+</html>
