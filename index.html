@@ -1,15 +1,13 @@
 <html>
 <head>
     <script type="text/javascript">
-        function goBackToHost() {
-            // if (window.webkit?.messageHandlers?.AppBridge) {
+        function dismiss() {
             if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.AppBridge) {
                 // iOS
-                window.webkit.messageHandlers.AppBridge.postMessage("goBackToHost");
-            // } else if (window.AppBridge?.goBackToHost) {
-            } else if (window.AppBridge && window.AppBridge.goBackToHost) {
+                window.webkit.messageHandlers.AppBridge.postMessage("dismiss");
+            } else if (window.AppBridge && window.AppBridge.dismiss) {
                 // Android
-                window.AppBridge.goBackToHost();
+                window.AppBridge.dismiss();
             } else {
                 // Fallback for web debugging
                 console.log("Back to host triggered");
@@ -18,14 +16,14 @@
 
         window.onload = function() {
             document.getElementById("back").addEventListener("click", function() {
-                goBackToHost();
+                dismiss();
             });
         };
     </script>
 </head>
 <body>
-    <h1>Hello Kid!</h1>
-    <p>Glad to see you here, I hope you enjoy it!</p>
+    <h1>WebView bridge Test</h1>
+    <p>Implement AppBridge.dismiss() on your app</p>
     <button id="back">Go back</button>
 </body>
 </html>
