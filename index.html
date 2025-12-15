@@ -26,26 +26,26 @@
     }
 
     function openExternal(link) {
-      const url = String(link);
+      const uri = String(link);
 
       // iOS WKWebView
       if (window.webkit?.messageHandlers?.AppBridge) {
         window.webkit.messageHandlers.AppBridge.postMessage({
           action: "openExternal",
-          url: url
+          uri: uri
         });
         return;
       }
 
       // Android WebView
       if (window.AppBridge?.openExternal) {
-        window.AppBridge.openExternal(url);
+        window.AppBridge.openExternal(uri);
         return;
       }
 
       // Web fallback
-      console.log("openExternal(): no native bridge available", url);
-      window.open(url, "_blank", "noopener,noreferrer");
+      console.log("openExternal(): no native bridge available", uri);
+      window.open(uri, "_blank", "noopener,noreferrer");
     }
 
     document.addEventListener("DOMContentLoaded", function () {
