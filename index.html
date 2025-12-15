@@ -27,21 +27,11 @@
             }
         }
 
-        window.onload = function() {
-            document.getElementById("back").addEventListener("click", function() {
-                dismiss();
-            });
-        };
-        window.onload = function() {
-            document.getElementById("link").addEventListener("click", function() {
-                openExternal("https://www.wikipedia.org");
-            });
-        };
-        window.onload = function() {
-            document.getElementById("phone").addEventListener("click", function() {
-                openExternal("tel:123456789");
-            });
-        };
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("back").addEventListener("click", dismiss);
+      document.getElementById("link").addEventListener("click", () => openExternal("https://www.wikipedia.org"));
+      document.getElementById("phone").addEventListener("click", () => openExternal("tel:123456789"));
+    });
     </script>
 </head>
 <body>
