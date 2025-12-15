@@ -14,9 +14,32 @@
             }
         }
 
+        function openExternal(link) {
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.AppBridge) {
+                // iOS
+                window.webkit.messageHandlers.AppBridge.postMessage("openExternal", link);
+            } else if (window.AppBridge && window.AppBridge.openExternal) {
+                // Android
+                window.AppBridge.openExternal(link);
+            } else {
+                // Fallback for web debugging
+                console.log("Back to host triggered");
+            }
+        }
+
         window.onload = function() {
             document.getElementById("back").addEventListener("click", function() {
                 dismiss();
+            });
+        };
+        window.onload = function() {
+            document.getElementById("link").addEventListener("click", function() {
+                openExternal("https://www.wikipedia.org");
+            });
+        };
+        window.onload = function() {
+            document.getElementById("phone").addEventListener("click", function() {
+                openExternal("tel:123456789");
             });
         };
     </script>
@@ -25,5 +48,7 @@
     <h1>WebView bridge Test</h1>
     <p>Implement AppBridge.dismiss() on your app</p>
     <button id="back">Go back</button>
+    <button id="link">Link</button>
+    <button id="phone">Phone</button>
 </body>
 </html>
