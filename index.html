@@ -1,44 +1,76 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script type="text/javascript">
-        function dismiss() {
-            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.AppBridge) {
-                // iOS
-                window.webkit.messageHandlers.AppBridge.postMessage("dismiss");
-            } else if (window.AppBridge && window.AppBridge.dismiss) {
-                // Android
-                window.AppBridge.dismiss();
-            } else {
-                // Fallback for web debugging
-                console.log("Back to host triggered");
-            }
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebView Bridge Test</title>
 
-        function openExternal(link) {
-            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.AppBridge) {
-                // iOS
-                window.webkit.messageHandlers.AppBridge.postMessage("openExternal", link);
-            } else if (window.AppBridge && window.AppBridge.openExternal) {
-                // Android
-                window.AppBridge.openExternal(link);
-            } else {
-                // Fallback for web debugging
-                console.log("Back to host triggered");
-            }
-        }
+  <script type="text/javascript">
+    function dismiss() {
+      // iOS WKWebView
+      if (window.webkit?.messageHandlers?.AppBridge) {
+        window.webkit.messageHandlers.AppBridge.postMessage({
+          action: "dismiss"
+        });
+        return;
+      }
+
+      // Android WebView
+      if (window.AppBridge?.dismiss) {
+        window.AppBridge.dismiss();
+        return;
+      }
+
+      // Web fallback
+      console.log("dismiss(): no native bridge available");
+    }
+
+    function openExternal(link) {
+      const url = String(link);
+
+      // iOS WKWebView
+      if (window.webkit?.messageHandlers?.AppBridge) {
+        window.webkit.messageHandlers.AppBridge.postMessage({
+          action: "openExternal",
+          url: url
+        });
+        return;
+      }
+
+      // Android WebView
+      if (window.AppBridge?.openExternal) {
+        window.AppBridge.openExternal(url);
+        return;
+      }
+
+      // Web fallback
+      console.log("openExternal(): no native bridge available", url);
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("back").addEventListener("click", dismiss);
-      document.getElementById("link").addEventListener("click", () => openExternal("https://www.wikipedia.org"));
-      document.getElementById("phone").addEventListener("click", () => openExternal("tel:123456789"));
+      document.getElementById("back")
+        .addEventListener("click", dismiss);
+
+      document.getElementById("link")
+        .addEventListener("click", function () {
+          openExternal("https://www.wikipedia.org");
+        });
+
+      document.getElementById("phone")
+        .addEventListener("click", function () {
+          openExternal("tel:+34123456789");
+        });
     });
-    </script>
+  </script>
 </head>
+
 <body>
-    <h1>WebView bridge Test</h1>
-    <p>Implement AppBridge.dismiss() and AppBridge.openExternal(url) on your app</p>
-    <button id="back">Go back</button>
-    <button id="link">Link</button>
-    <button id="phone">Phone</button>
+  <h1>WebView bridge test</h1>
+  <p>Implement <code>AppBridge.dismiss()</code> and <code>AppBridge.openExternal(url)</code> on your app</p>
+
+  <button id="back">Go back</button>
+  <button id="link">Open link</button>
+  <button id="phone">Call phone</button>
 </body>
 </html>
